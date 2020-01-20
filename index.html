@@ -8,7 +8,73 @@
 
 </head>
 <body>
-    <h1>This is a WebApp</h1>
+    <h1>GifTastic</h1>
+    <div id="buttons-view"></div>
+
+    <form id="topic-form">
+      <label for="topic-input">Add a Topic!</label>
+      <input type="text" id="topic-input"><br>
+      <input id="add-topic" type="submit" value="Add a Topic!">
+    </form>
+
+    <div id="topic-view"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      // Initial array of Topics
+      var topics = ["Japan", "Egypt", "China", "Russia", "Canada", "France", "Nigeria"];
+
+      function displayGifs() {
+          var topic = $(this).attr("data-name");
+          console.log(topic)
+          var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=2Akq2umcjymZrsslWvHrwZl0JNu1OyGS&q=" + topic + "l&limit=10&offset=0&lang=en";
+
+          $.ajax({
+          url: queryURL,
+          method: "GET"
+        }).then(function(response) {
+              console.log(response);
+              $("topic-view").empty();
+              let d = $("<div>");
+              for (let i = 0; i < response.data.length; i++) {
+                  
+                  
+              
+              let rating = response.data[i].rating;
+              console.log(rating);
+              let ratingDisplay = $("<p>").text(rating);
+              let still = response.data[i].images.fixed_width_still.url;
+          
+          d.append(ratingDisplay);
+          d.append($('<img>',{id:'theImg',src: still}))
+          $("#topic-view").prepend(d);
+          }})
+
+      }
+
+      function renderButtons(){
+          $("#buttons-view").empty();
+          for (let i =0; i < topics.length; i++) {
+              var a = $("<button>");
+              a.addClass("topic");
+              a.attr("data-name", topics[i]);
+              a.text(topics[i]);
+              $("#buttons-view").append(a);
+              
+          }
+      }
+
+      $("#add-topic").on("click", function(event) {
+          event.preventDefault();
+          var topic = $("#topic-input").val().trim();
+          topics.push(topic);
+          renderButtons();
+      })
+      $(document).on("click", ".topic", displayGifs);
+
+
+renderButtons();
+      </script>
     
 </body>
 </html>
