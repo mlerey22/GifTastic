@@ -23,6 +23,8 @@
     <script type="text/javascript">
       // Initial array of Topics
       var topics = ["Japan", "Egypt", "China", "Russia", "Canada", "France", "Nigeria"];
+      var gif;
+      var still;
 
       function displayGifs() {
           var topic = $(this).attr("data-name");
@@ -38,19 +40,49 @@
               let d = $("<div>");
               for (let i = 0; i < response.data.length; i++) {
                   
-                  
-              
               let rating = response.data[i].rating;
               console.log(rating);
               let ratingDisplay = $("<p>").text(rating);
-              let still = response.data[i].images.fixed_width_still.url;
+              gif = response.data[i].images.fixed_width.url
+              still = response.data[i].images.fixed_width_still.url;
           
+            
+          d.append($('<img>',{id:'image' + [i], class:"gif", src: still, 'data-state': 'still', 'data-gif': gif, 'data-still': still}));
           d.append(ratingDisplay);
-          d.append($('<img>',{id:'theImg',src: still}))
           $("#topic-view").prepend(d);
+          $(".gif").on("click", function() {
+            console.log(this);
+           
+            var state = $(this).attr("data-state")
+               
+            if (state == "still") {
+                $(this).attr("src", $(this).attr("data-gif"))
+                $(this).attr("data-state", "animate");
+            } else if (state == "animate") {
+                $(this).attr("src", $(this).attr("data-still"))
+                $(this).attr("data-state", "still");
+            }
+            
+        });
           }})
+         
+          
 
       }
+      $(".gif").on("click", function() {
+            console.log(this);
+           
+            var state = $(this).attr("data-state")
+               
+            if (state == "still") {
+                $(this).attr("src", $(this).attr("data-gif"))
+                $(this).attr("data-state", "animate");
+            } else if (state == "animate") {
+                $(this).attr("src", $(this).attr("data-still"))
+                $(this).attr("data-state", "still");
+            }
+            
+        });
 
       function renderButtons(){
           $("#buttons-view").empty();
@@ -74,6 +106,7 @@
 
 
 renderButtons();
+
       </script>
     
 </body>
